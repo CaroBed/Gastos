@@ -530,7 +530,17 @@
   }
 
   document.getElementById('date-label').textContent = formatDate(new Date());
+  
+const amountInput = document.getElementById('amount-input');
+amountInput.addEventListener('input', () => {
+  const raw = amountInput.value.replace(/\./g, '').replace(/\D/g, '');
+  if (raw === '') { amountInput.value = ''; return; }
+  amountInput.value = Number(raw).toLocaleString('es-AR');
+});
 
+function getRawAmount() {
+  return parseFloat(amountInput.value.replace(/\./g, '')) || 0;
+}
   function setUser(name) {
     currentUser = name;
     document.getElementById('user-label').textContent = name;
@@ -604,8 +614,8 @@
   }
 
   async function submitExpense() {
-    const amount = document.getElementById('amount-input').value;
-    if (!amount || parseFloat(amount) <= 0) { showToast('Ingresá un monto'); return; }
+    const amount = getRawAmount();
+    if (!amount || amount <= 0) { showToast('Ingresá un monto'); return; }
     if (!selectedCat) { showToast('Elegí una categoría'); return; }
 
     const btn = document.getElementById('submit-btn');
@@ -614,7 +624,7 @@
     setStatus('pending');
 
     const expense = {
-      amount: parseFloat(amount),
+      amount: amount,
       cat: selectedCat,
       detail: document.getElementById('detail-input').value.trim(),
       date: formatDate(new Date()),
