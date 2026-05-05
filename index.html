@@ -534,11 +534,12 @@
 
   const amountInput = document.getElementById('amount-input');
   amountInput.addEventListener('input', () => {
-    const startsWithMinus = amountInput.value.startsWith('-');
-    const raw = amountInput.value.replace(/\./g, '').replace(/[^\d]/g, '');
-    if (raw === '') { amountInput.value = startsWithMinus ? '-' : ''; return; }
-    amountInput.value = (startsWithMinus ? '-' : '') + Number(raw).toLocaleString('es-AR');
-  });
+  let val = amountInput.value;
+  const startsWithMinus = val.startsWith('-');
+  const raw = val.replace(/[-\.]/g, '').replace(/\D/g, '');
+  if (raw === '') { amountInput.value = startsWithMinus ? '-' : ''; return; }
+  amountInput.value = (startsWithMinus ? '-' : '') + Number(raw).toLocaleString('es-AR');
+});
 
   function getRawAmount() {
     const clean = amountInput.value.replace(/\./g, '');
