@@ -534,13 +534,15 @@
   
 const amountInput = document.getElementById('amount-input');
 amountInput.addEventListener('input', () => {
-  const raw = amountInput.value.replace(/\./g, '').replace(/\D/g, '');
-  if (raw === '') { amountInput.value = ''; return; }
-  amountInput.value = Number(raw).toLocaleString('es-AR');
+  const startsWithMinus = amountInput.value.startsWith('-');
+  const raw = amountInput.value.replace(/\./g, '').replace(/[^\d]/g, '');
+  if (raw === '') { amountInput.value = startsWithMinus ? '-' : ''; return; }
+  amountInput.value = (startsWithMinus ? '-' : '') + Number(raw).toLocaleString('es-AR');
 });
 
 function getRawAmount() {
-  return parseFloat(amountInput.value.replace(/\./g, '')) || 0;
+  const clean = amountInput.value.replace(/\./g, '');
+  return parseFloat(clean) || 0;
 }
   function setUser(name) {
     currentUser = name;
