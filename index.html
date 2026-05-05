@@ -657,9 +657,10 @@ function getRawAmount() {
     selectedCat = null;
     renderCats();
 
-    btn.disabled = false;
-    btn.textContent = 'Guardar gasto';
-  }
+    setTimeout(() => {
+  btn.disabled = false;
+  btn.textContent = 'Guardar gasto';
+}, 2000);
 
   // Restore last user
   const lastUser = localStorage.getItem('lastUser');
