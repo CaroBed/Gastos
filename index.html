@@ -531,19 +531,20 @@
   }
 
   document.getElementById('date-label').textContent = formatDate(new Date());
-  
-const amountInput = document.getElementById('amount-input');
-amountInput.addEventListener('input', () => {
-  const startsWithMinus = amountInput.value.startsWith('-');
-  const raw = amountInput.value.replace(/\./g, '').replace(/[^\d]/g, '');
-  if (raw === '') { amountInput.value = startsWithMinus ? '-' : ''; return; }
-  amountInput.value = (startsWithMinus ? '-' : '') + Number(raw).toLocaleString('es-AR');
-});
 
-function getRawAmount() {
-  const clean = amountInput.value.replace(/\./g, '');
-  return parseFloat(clean) || 0;
-}
+  const amountInput = document.getElementById('amount-input');
+  amountInput.addEventListener('input', () => {
+    const startsWithMinus = amountInput.value.startsWith('-');
+    const raw = amountInput.value.replace(/\./g, '').replace(/[^\d]/g, '');
+    if (raw === '') { amountInput.value = startsWithMinus ? '-' : ''; return; }
+    amountInput.value = (startsWithMinus ? '-' : '') + Number(raw).toLocaleString('es-AR');
+  });
+
+  function getRawAmount() {
+    const clean = amountInput.value.replace(/\./g, '');
+    return parseFloat(clean) || 0;
+  }
+
   function setUser(name) {
     currentUser = name;
     document.getElementById('user-label').textContent = name;
@@ -618,7 +619,7 @@ function getRawAmount() {
 
   async function submitExpense() {
     const amount = getRawAmount();
-    if (!amount || amount <= 0) { showToast('Ingresá un monto'); return; }
+    if (amount === 0) { showToast('Ingresá un monto'); return; }
     if (!selectedCat) { showToast('Elegí una categoría'); return; }
 
     const btn = document.getElementById('submit-btn');
@@ -652,15 +653,16 @@ function getRawAmount() {
     expenses.push(expense);
     localStorage.setItem('expenses', JSON.stringify(expenses.slice(-200)));
 
-    document.getElementById('amount-input').value = '';
+    amountInput.value = '';
     document.getElementById('detail-input').value = '';
     selectedCat = null;
     renderCats();
 
     setTimeout(() => {
-  btn.disabled = false;
-  btn.textContent = 'Guardar gasto';
-}, 2000);
+      btn.disabled = false;
+      btn.textContent = 'Guardar gasto';
+    }, 2000);
+  }
 
   // Restore last user
   const lastUser = localStorage.getItem('lastUser');
